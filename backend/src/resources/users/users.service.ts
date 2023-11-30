@@ -74,7 +74,10 @@ export class UsersService {
   }
 
   findOneByEmail(email: string) {
-    return this.userRepository.findOne({ where: { email } });
+    return this.userRepository.findOne({
+      where: { email },
+      select: ['id', 'email', 'password'],
+    });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

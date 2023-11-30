@@ -1,5 +1,23 @@
 ## User Listing
 
+### Backend
+
+Source: [backend](./backend/)
+
+Live: https://codiste-users-listing.onrender.com
+
+Swagger: https://codiste-users-listing.onrender.com/api/
+
+Built using Nest.js, TypeORM, PostgreSQL with seeding utility.
+
+### Frontend
+
+Source: [frontend](./frontend/)
+
+Live: https://d3pciznhwdy3zz.cloudfront.net/login
+
+Built using React.js, Formik and Yup.
+
 ## Requirements
 
 Create User CRUD (Fields: name, email, mobileNumber, password):

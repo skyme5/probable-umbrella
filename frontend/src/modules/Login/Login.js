@@ -45,7 +45,7 @@ const Login = () => {
             });
           }}
         >
-          {({ errors, touched }) => (
+          {({ errors, touched, isSubmitting, submitForm }) => (
             <StyledForm>
               <label htmlFor="email">
                 Email Address
@@ -59,7 +59,9 @@ const Login = () => {
                 {errors.password && touched.password ? <span>{errors.password}</span> : null}
               </label>
               {error && <span>{error}</span>}
-              <button type="button">Submit</button>
+              <button type="button" onClick={submitForm} disabled={isSubmitting}>
+                Submit
+              </button>
             </StyledForm>
           )}
         </Formik>
