@@ -17,6 +17,7 @@ export const StyledWrapper = styled.div`
 export const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
+  color: black;
 
   min-width: 300px;
 
@@ -27,5 +28,10 @@ export const StyledForm = styled.form`
     flex-direction: column;
     gap: 0.5rem;
     color: black;
+
+    span {
+      font-size: 12px;
+      color: red;
+    }
   }
 `;

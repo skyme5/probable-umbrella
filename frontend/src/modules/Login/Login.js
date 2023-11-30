@@ -1,13 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { useMutation } from '@tanstack/react-query';
-import { useFormik } from 'formik';
+import { Field, Formik } from 'formik';
 import { useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
 
 import { StyledContainer, StyledForm, StyledWrapper } from './Login.styled';
 
 import WithErrorBoundary from '#/hooks/withErrorBoundary';
 import { axiosClient } from '#/utils/axiosClient';
+
+const LoginSchema = Yup.object().shape({
+  email: Yup.string().email('Please enter a valid email').required('Email is required'),
+  password: Yup.string()
+    .min(2, 'Please enter password with minimum 2 characters')
+    .max(50, 'Please enter password with maximum 2 characters')
+    .required('Password is required'),
+});
 
 const Login = () => {
   const navigation = useNavigate();
@@ -17,47 +26,43 @@ const Login = () => {
     mutationFn: (data) => axiosClient.post(`/auth/login`, data),
   });
 
-  const formik = useFormik({
-    initialValues: {
-      email: '',
-      password: '',
-    },
-    onChange: () => setError(null),
-    onSubmit: async (values) => {
-      setError(null);
-
-      await mutation.mutate(values, {
-        onSuccess: () => navigation('/', { replace: true }),
-        onError: (err) => setError(err.response.data.message),
-      });
-    },
-  });
-
-  useEffect(() => {
-    setError(null);
-  }, [formik.values]);
-
   return (
     <StyledContainer>
       <StyledWrapper>
-        <StyledForm onSubmit={formik.handleSubmit}>
-          <label htmlFor="email">
-            Email Address
-            <input id="email" name="email" type="email" onChange={formik.handleChange} value={formik.values.email} />
-          </label>
-          <label htmlFor="password">
-            Password
-            <input
-              id="password"
-              name="password"
-              type="password"
-              onChange={formik.handleChange}
-              value={formik.values.password}
-            />
-          </label>
-          {error && <span>{error}</span>}
-          <button type="submit">Submit</button>
-        </StyledForm>
+        <Formik
+          initialValues={{
+            email: '',
+            password: '',
+          }}
+          validationSchema={LoginSchema}
+          validateOnChange
+          onSubmit={async (values) => {
+            setError(null);
+
+            await mutation.mutate(values, {
+              onSuccess: () => navigation('/', { replace: true }),
+              onError: (err) => setError(err.response.data.message),
+            });
+          }}
+        >
+          {({ errors, touched }) => (
+            <StyledForm>
+              <label htmlFor="email">
+                Email Address
+                <Field name="email" type="email" />
+                {errors.email && touched.email ? <span>{errors.email}</span> : null}
+              </label>
+
+              <label htmlFor="password">
+                Password
+                <Field name="password" type="password" />
+                {errors.password && touched.password ? <span>{errors.password}</span> : null}
+              </label>
+              {error && <span>{error}</span>}
+              <button type="button">Submit</button>
+            </StyledForm>
+          )}
+        </Formik>
       </StyledWrapper>
     </StyledContainer>
   );
